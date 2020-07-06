@@ -78,7 +78,8 @@ void Vehicle::drive()
                 //Intersection::addVehicleToQueue, 
                 // the object _currDestination and a shared pointer to this using the get_shared_this() function. 
                 // Then, wait for the data to be available before proceeding to slow down.
-                std::future<void> ftr = std::async(&Intersection::addVehicleToQueue, _currDestination, this->shared_from_this());
+                //std::future<void> ftr = std::async(&Intersection::addVehicleToQueue, this->_currDestination, this->shared_from_this());
+                std::future<void> ftr = std::async([this](){this->_currDestination->addVehicleToQueue(this->shared_from_this());});
                 ftr.wait();
                 ftr.get();
                 // slow down and set intersection flag
