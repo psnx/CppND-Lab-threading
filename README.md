@@ -1,11 +1,10 @@
 # Udacity C++ Nanodegree program - Concurrency lab
 ---
-**NOTE**
+**NOTE :excalamation: **  
 Spoiler alert! This repo shows the solution to the tasks you are supposed to solve in the lab.
 ---  
 
 [Here](https://github.com/udacity/CppND-Program-a-Concurrent-Traffic-Simulation) is the final project starter code.
-
 
 # Installation
 ## Dependencies for Running Locally
@@ -23,6 +22,7 @@ Linux: `gcc` / `g++` is installed by default on most Linux distros
 Mac: same deal as make - install Xcode command line tools
 Windows: recommend using [MinGW](http://www.mingw.org)
 
+# Taks
 
 ## Task L2.1 
 In method `Vehicle::drive()`, start up a task using `std::async` which takes a reference to the
