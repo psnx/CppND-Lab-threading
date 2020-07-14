@@ -1,3 +1,25 @@
+# Udacity C++ Nanodegree program - Concurrency lab
+Spoiler alert! This repo shows the solution to the tasks you are supposed to solve in the lab.
+[Here](https://github.com/udacity/CppND-Program-a-Concurrent-Traffic-Simulation) is the final project starter code.
+
+
+# Installation
+## Dependencies for Running Locally
+
+- **cmake** >= 2.8
+All OSes: click [here for installation instructions](https://cmake.org/install/)
+- **make** >= 4.1 (Linux, Mac), 3.81 (Windows)
+Linux: make is installed by default on most Linux distros
+_Mac_: install Xcode command line tools to get make
+_Windows_: Click here for installation instructions
+OpenCV >= 4.1
+- **The OpenCV 4.1.0** source code can be found [here](https://developer.apple.com/xcode/features/)
+gcc/g++ >= 5.4
+Linux: `gcc` / `g++` is installed by default on most Linux distros
+Mac: same deal as make - install Xcode command line tools
+Windows: recommend using [MinGW](http://www.mingw.org)
+
+
 ## Task L2.1 
 In method `Vehicle::drive()`, start up a task using `std::async` which takes a reference to the
 method Intersection::addVehicleToQueue, the object _currDestination and a shared pointer to this using the
@@ -15,7 +37,7 @@ In method `Intersection::addVehicleToQueue()`, add the new vehicle to the waitin
 creating a promise, a corresponding future and then adding both to `_waitingVehicles`. Then wait until
 the vehicle has been granted entry.
 
-### Solution L2.2
+### Solution
 ```cpp
 void Intersection::addVehicleToQueue(std::shared_ptr<Vehicle> vehicle)
 {
@@ -42,8 +64,35 @@ _vehicles.erase(_vehicles.begin());
 ## Task L3.1   
 In class `WaitingVehicles`, safeguard all accesses to the private members `_vehicles` and `_promises` with an appropriate locking mechanism, that will not cause a deadlock situation where access to the resources is accidentally blocked.
 
-## Task L2.2  
+### Solution  
+Implement a `unique_lock<std::mutex>` in all pubvlic members where resources are accessed: 
+```cpp
+std::unique_lock<std::mutex> lck(mtx);
+```
+
+## Task L3.2  
 Add a static mutex to the base class `TrafficObject` (called `_mtxCout`) and properly instantiate it in the source file. This mutex will be used in the next task to protect standard-out. 
 
-## Task L2.3  
-In method Intersection::addVehicleToQueue and in `Vehicle::drive()` ensure that the text output locks the console as a shared resource. Use the mutex `_mtxCout` you have added to the base class TrafficObject in the previous task. Make sure that in between the two calls to std::cout at the beginning and at the end of addVehicleToQueue the lock is not held.
+### Solution  
+```cpp
+td::mutex TrafficObject::_mtxCout;
+```
+
+## Task L3.3  
+In method `Intersection::addVehicleToQueue` and in `Vehicle::drive()` ensure that the text output locks the console as a shared resource. Use the mutex `_mtxCout` you have added to the base class TrafficObject in the previous task. Make sure that in between the two calls `to std::cout` at the beginning and at the end of addVehicleToQueue the lock is not held.
+
+### Solution  
+```cpp
+void Intersection::addVehicleToQueue(std::shared_ptr<Vehicle> vehicle)
+{
+    std::unique_lock<std::mutex> lck(_mtxCout);
+    std::cout << "Intersection #" << _id << "::addVehicleToQueue: thread id = " << std::this_thread::get_id() << std::endl;
+    lck.unlock();
+    std::promise<void> promise;
+    std::future<void> future = promise.get_future();
+    _waitingVehicles.pushBack(vehicle, std::move(promise));
+    future.get();
+    lck.lock();
+    std::cout << "Intersection #" << _id << ": Vehicle #" << vehicle->getID() << " is granted entry." << std::endl;
+}
+```
