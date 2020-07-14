@@ -1,7 +1,6 @@
 # Udacity C++ Nanodegree program - Concurrency lab
 ---
-**NOTE :exclamation: **  
-Spoiler alert! This repo shows the solution to the tasks you are supposed to solve in the lab.
+:exclamation: Spoiler alert! This repo shows the solution to the tasks you are supposed to solve in the lab.
 ---  
 
 [Here](https://github.com/udacity/CppND-Program-a-Concurrent-Traffic-Simulation) is the final project starter code.
