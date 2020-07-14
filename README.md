@@ -1,6 +1,6 @@
 # Udacity C++ Nanodegree program - Concurrency lab
 ---
-**NOTE :excalamation: **  
+**NOTE :exclamation: **  
 Spoiler alert! This repo shows the solution to the tasks you are supposed to solve in the lab.
 ---  
 
